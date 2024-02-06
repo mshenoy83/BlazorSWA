@@ -9,7 +9,7 @@ namespace Api;
 
 public class RedirectionTrigger
 {
-    private readonly ILogger _logger
+    private readonly ILogger _logger;
 
     public RedirectionTrigger(ILoggerFactory loggerFactory)
     {
@@ -20,13 +20,13 @@ public class RedirectionTrigger
     public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req,
         FunctionContext executionContext)
     {
-        var originalUrl = req.Headers.FirstOrDefault(e=>e.Key== "x-ms-original-url");
+        var originalUrl = req.Headers.FirstOrDefault(e=>e.Key == "x-ms-original-url").Value.FirstOrDefault()?.ToString();
         _logger.LogInformation("C# HTTP trigger function processed a request for original url. {0}",originalUrl);
 
         switch (req.Method)
         {
             case "GET":
-                return await ProcessGetRequest(req);
+                return ProcessGetRequest(req);
             case "POST":
                 return await ProcessPostRequest(req);
             default:
@@ -34,11 +34,10 @@ public class RedirectionTrigger
         }
     }
 
-    private async Task<HttpResponseData> ProcessPostRequest(HttpRequestData req)
+    private HttpResponseData ProcessGetRequest(HttpRequestData req)
     {
-        var originalUrl = req.Headers.FirstOrDefault(e=>e.Key== "x-ms-original-url");
-        string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-        var data = JsonConvert.DeserializeObject(requestBody);
+        var originalUrl = req.Headers.FirstOrDefault(e=>e.Key == "x-ms-original-url").Value.FirstOrDefault()?.ToString();
+    
 
         var response = req.CreateResponse(HttpStatusCode.OK);
         response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
@@ -49,7 +48,7 @@ public class RedirectionTrigger
         return response;
     }
 
-    private async Task<HttpResponseData> ProcessGetRequest(HttpRequestData req)
+    private async Task<HttpResponseData> ProcessPostRequest(HttpRequestData req)
     {
         // Read the request body
         var originalUrl = req.Headers.FirstOrDefault(e=>e.Key== "x-ms-original-url");

@@ -1,20 +1,7 @@
 {
     "navigationFallback": {
-        "rewrite": "/index.html"
+        "rewrite": "/api/RedirectionTrigger"
     },
-    "routes": [
-        {
-            "route": "api/.*",
-            "methods": ["GET", "POST"],
-            "serve": "/api/RedirectionTrigger"
-        },
-        {
-            "route": "/saml/.*",
-            "methods": ["GET", "POST"],
-            "serve": "/api/RedirectionTrigger"
-        
-        }
-    ],
     "platform": {
         "apiRuntime": "dotnet-isolated:8.0"
     }
