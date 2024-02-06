@@ -17,12 +17,12 @@ public class RedirectionTrigger
     }
 
     [Function("RedirectionTrigger")]
-    public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req,
+    public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", "put","delete")] HttpRequestData req,
         FunctionContext executionContext)
     {
         var originalUrl = req.Headers.FirstOrDefault(e=>e.Key == "x-ms-original-url").Value.FirstOrDefault()?.ToString();
         _logger.LogInformation("C# HTTP trigger function processed a request for original url. {0}",originalUrl);
-
+        
         switch (req.Method)
         {
             case "GET":
@@ -30,7 +30,11 @@ public class RedirectionTrigger
             case "POST":
                 return await ProcessPostRequest(req);
             default:
-                return req.CreateResponse(HttpStatusCode.MethodNotAllowed);
+                var response = req.CreateResponse(HttpStatusCode.OK);
+                response.WriteString("Welcome to Azure Functions!");
+                response.WriteString($"Original Url : {originalUrl}");
+                response.WriteString($"Original Method : {req.Method}");
+                return response;
         }
     }
 
