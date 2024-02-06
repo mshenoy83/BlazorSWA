@@ -6,14 +6,13 @@
         {
             "route": "api/.*",
             "methods": ["GET", "POST"],
-            "redirect": "/api/RedirectionTrigger",
-            "statusCode": 301
+            "serve": "/api/RedirectionTrigger"
         },
         {
             "route": "/saml/.*",
             "methods": ["GET", "POST"],
-            "redirect": "/api/RedirectionTrigger",
-            "statusCode": 301
+            "serve": "/api/RedirectionTrigger"
+        
         }
     ],
     "platform": {

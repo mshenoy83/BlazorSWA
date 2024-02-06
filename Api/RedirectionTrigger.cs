@@ -9,12 +9,10 @@ namespace Api;
 
 public class RedirectionTrigger
 {
-    private readonly ILogger _logger;
-    private readonly HttpClient _httpClient;
+    private readonly ILogger _logger
 
-    public RedirectionTrigger(ILoggerFactory loggerFactory, HttpClient httpClient)
+    public RedirectionTrigger(ILoggerFactory loggerFactory)
     {
-        _httpClient = httpClient;
         _logger = loggerFactory.CreateLogger<RedirectionTrigger>();
     }
 
